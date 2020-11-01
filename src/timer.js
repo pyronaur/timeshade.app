@@ -1,4 +1,4 @@
-const setupCallbacks = () => {
+const callbackFactory = () => {
     let storage = [];
   
     return {
@@ -14,10 +14,10 @@ const setupCallbacks = () => {
     let defaultTime = time;
     let intervalID = false;
     let callbacks = {
-      onStart: setupCallbacks(),
-      onStop: setupCallbacks(),
-      onTick: setupCallbacks(),
-      onDone: setupCallbacks(),
+      onStart: callbackFactory(),
+      onStop: callbackFactory(),
+      onTick: callbackFactory(),
+      onDone: callbackFactory(),
     };
   
     const active = () => false !== intervalID;
