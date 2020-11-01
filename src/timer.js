@@ -10,8 +10,8 @@ const callbackFactory = () => {
     };
   };
   
-  const createTimer = (time = 25 * 60) => {
-    let defaultTime = time;
+  const timerFactory = (startingValue, ticker) => {
+    let seconds = startingValue
     let intervalID = false;
     let callbacks = {
       onStart: callbackFactory(),
@@ -23,15 +23,15 @@ const callbackFactory = () => {
     const active = () => false !== intervalID;
     const toggle = () => (active() ? stop() : start());
     const tick = () => {
-      --time;
+      seconds = ticker(seconds)
       callbacks.onTick.run();
-      if (time === 0) {
+      if (seconds === 0) {
         done();
       }
     };
   
     const start = () => {
-      intervalID = setInterval(tick, 100);
+      intervalID = setInterval(tick, 1000);
       callbacks.onStart.run();
     };
   
@@ -43,7 +43,7 @@ const callbackFactory = () => {
   
     const clear = () => {
       stop();
-      time = defaultTime;
+      seconds = startingValue;
     };
   
     const done = () => {
@@ -51,7 +51,7 @@ const callbackFactory = () => {
       callbacks.onDone.run();
     };
 
-    const getSecondsRemaining = () => time
+    const getCurrentSeconds = () => seconds
   
     return {
       start,
@@ -60,10 +60,19 @@ const callbackFactory = () => {
       active,
       callbacks,
       clear,
-      getSecondsRemaining,
+      getCurrentSeconds,
     };
   };
   
-  export default createTimer
+
+const increment = (v) => ++v
+const decrement = (v) => --v
+const createStopwatch = (startingValue = 0) => timerFactory( startingValue, increment )
+const createTimer = (startingValue = 60 * 25) => timerFactory( startingValue, decrement )
+
+export {
+  createStopwatch,
+  createTimer
+}
   
   
