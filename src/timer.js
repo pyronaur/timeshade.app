@@ -24,7 +24,7 @@ const setupCallbacks = () => {
     const toggle = () => (active() ? stop() : start());
     const tick = () => {
       --time;
-      callbacks.onTick.run(time);
+      callbacks.onTick.run();
       if (time === 0) {
         done();
       }
@@ -50,6 +50,8 @@ const setupCallbacks = () => {
       clear();
       callbacks.onDone.run();
     };
+
+    const getSecondsRemaining = () => time
   
     return {
       start,
@@ -58,6 +60,7 @@ const setupCallbacks = () => {
       active,
       callbacks,
       clear,
+      getSecondsRemaining,
     };
   };
   
