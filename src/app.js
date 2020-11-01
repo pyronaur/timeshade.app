@@ -18,19 +18,4 @@ const startApp = () => {
   render(10);
 };
 
-const startConsoleApp = () => {
-  const consoleTimer = createTimer(3);
-  consoleTimer.callbacks.onTick.add((time) => {
-    console.log(time);
-  });
-  consoleTimer.callbacks.onStart.add(() => {
-    console.log("Starting");
-  });
-  consoleTimer.callbacks.onDone.add(() => {
-    console.log("Finito");
-  });
-  consoleTimer.start();
-};
-
 startApp();
-startConsoleApp();
