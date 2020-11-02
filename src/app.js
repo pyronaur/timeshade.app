@@ -48,6 +48,12 @@ const startApp = () => {
   timer.callbacks.onStart.add( () => {
     stopwatch.start()
   })
+  timer.callbacks.onStop.add( () => {
+    stopwatch.stop()
+  })
+  timer.callbacks.onDone.add( () => {
+    stopwatch.start()
+  })
   stopwatch.callbacks.onStop.add( () => {
     timer.stop()
   })
