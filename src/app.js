@@ -1,27 +1,52 @@
 import {createTimer, createStopwatch} from "./timer";
 
 const format_time = (time) => ("0" + time).slice(-2);
-const timer = createTimer(10);
 
-const startApp = () => {
-  const $time = document.querySelector("#time");
-  const $toggle = document.querySelector("#toggle");
+
+
+
+
+const counterUI = (selector, ticker) => {
+  const $timer = document.querySelector(selector);
+  const $time = $timer.querySelector('.time')
+  const $toggle = $timer.querySelector('.toggle')
+  
+
+
+  const setToggleLabel = () => {
+    $toggle.textContent = ( ticker.isActive() ? 'Stop' : 'Start')
+  }
 
   const render = () => {
-    let time = timer.getCurrentSeconds()
+    let time = ticker.getCurrentSeconds()
     let seconds = format_time(time % 60);
     let minutes = format_time(Math.floor(time / 60));
     $time.textContent = `${minutes}:${seconds}`;
-  };
+  }
+  
+  ticker.callbacks.onTick.add(render);
+  ticker.callbacks.onDone.add(render);
+  $toggle.addEventListener("click", () => {
+    ticker.toggle()
+    setToggleLabel($toggle, ticker.isActive())
+  });
 
-  timer.callbacks.onTick.add(render);
-  timer.callbacks.onDone.add(render);
-  $toggle.addEventListener("click", timer.toggle);
+
+  ticker.callbacks.onStart.add(setToggleLabel)
+  ticker.callbacks.onStop.add(setToggleLabel)  
   render();
-};
+}
 
+
+const startApp = () => {
+  const timer = createTimer(60)
+  const stopwatch = createStopwatch(0)
+
+  counterUI('.timer', timer)
+  counterUI('.stopwatch', stopwatch)
+
+  timer.callbacks.onStart.add( () => {
+    stopwatch.start()
+  })
+}
 startApp();
-
-// const stopwatch = createStopwatch()
-// stopwatch.callbacks.onTick.add( () => console.log(stopwatch.getCurrentSeconds()))
-// stopwatch.start()

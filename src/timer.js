@@ -20,8 +20,8 @@ const callbackFactory = () => {
       onDone: callbackFactory(),
     };
   
-    const active = () => false !== intervalID;
-    const toggle = () => (active() ? stop() : start());
+    const isActive = () => false !== intervalID;
+    const toggle = () => (isActive() ? stop() : start());
     const tick = () => {
       seconds = ticker(seconds)
       callbacks.onTick.run();
@@ -31,11 +31,21 @@ const callbackFactory = () => {
     };
   
     const start = () => {
+      
+      if( isActive() ) {
+        return;
+      }
+
       intervalID = setInterval(tick, 1000);
       callbacks.onStart.run();
     };
   
     const stop = () => {
+
+      if( ! isActive() ) {
+        return;
+      }
+
       clearInterval(intervalID);
       intervalID = false;
       callbacks.onStop.run();
@@ -57,7 +67,7 @@ const callbackFactory = () => {
       start,
       stop,
       toggle,
-      active,
+      isActive,
       callbacks,
       clear,
       getCurrentSeconds,
