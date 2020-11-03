@@ -10,6 +10,7 @@ const counterUI = (selector, ticker) => {
   const $timer = document.querySelector(selector);
   const $time = $timer.querySelector('.time')
   const $toggle = $timer.querySelector('.toggle')
+  const $reset = $timer.querySelector('.reset')
   
 
 
@@ -29,6 +30,9 @@ const counterUI = (selector, ticker) => {
   $toggle.addEventListener("click", () => {
     ticker.toggle()
     setToggleLabel($toggle, ticker.isActive())
+  });
+  $reset.addEventListener("click", () => {
+    ticker.reset()
   });
 
 
