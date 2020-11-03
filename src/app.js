@@ -37,11 +37,28 @@ const counterUI = (selector, ticker) => {
   render();
 }
 
+const timeTracker = ( trackerName, defaultValue ) => {
+  const key = `time_${trackerName}`
+  return {
+    save: (value) => localStorage.setItem(key, value),
+    get: () => localStorage.getItem(key) || defaultValue
+  }
+}
 
 const startApp = () => {
-  const timer = createTimer(60)
-  const stopwatch = createStopwatch(0)
-
+  
+  const timerTracker = timeTracker('timer', 60 * 25)
+  const timer = createTimer(timerTracker.get())
+  timer.callbacks.onTick.add(timerTracker.save)
+  timer.callbacks.onStop.add(timerTracker.save)
+  timer.callbacks.onDone.add(timerTracker.save)
+  
+  const stopwatchTracker = timeTracker('stopwatch', 0)
+  const stopwatch = createStopwatch(stopwatchTracker.get())
+  stopwatch.callbacks.onTick.add(stopwatchTracker.save)
+  stopwatch.callbacks.onStop.add(stopwatchTracker.save)
+  stopwatch.callbacks.onDone.add(stopwatchTracker.save)
+  
   counterUI('.timer', timer)
   counterUI('.stopwatch', stopwatch)
 
